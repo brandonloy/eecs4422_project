@@ -9,25 +9,35 @@ from scipy import signal
 
 
 def hogFilter(hsv, bbox, cell_size=(8,8)):
+    '''
+    Calculates HOG features from the supplied HSV image
+
+    Inputs:
+    hsv - Video frame in hsv color space
+    bbox - ROI to create filter from
+    cell_size - Size of HOG cells
+
+    Outputs:
+    Each output array has 9 channels, for the different orientations of
+    the gradients
+    
+    filt - Filters to be used in correlation
+    feat - Features to apply next frames filter on
+    exp - Expected response (filt convoluted with feat)
+    learn - Channel Learning reliability (Highest activation in each channel of exp)
+    '''
     x,y,w,h = bbox
     res = spatialMap(hsv, bbox)
     mask = np.zeros(hsv.shape,np.uint8)
     mask[:,:,0] = res
     mask[:,:,1] = res
     mask[:,:,2] = res
-##    print(res.dtype)
-##    print(hsv.dtype)
-##    print(mask.dtype)
+
     maskedImg = cv2.bitwise_and(hsv, mask)
-##    plt.imshow(mask)
-##    plt.show()
+
     patch = maskedImg[y:y+h,x:x+w]
 
-    #cv2.imshow('',res)
-    #plt.imshow(res)
-    #plt.show()
-
-# Filter should be the whole HOG image, but i started off with a patch
+# Filter should be the whole HOG image, but I get better results with a patch
     filt = hog(patch, cell_size)
     #filt = hog(maskedImg, cell_size)
 
@@ -56,6 +66,8 @@ def hogFilter(hsv, bbox, cell_size=(8,8)):
 
 def convFilt(filt, feat):
     """
+    Performs convolution in the fourier domain using scipy
+
     Inputs:
     filt - single channel, unnormalized
     feat - feature image

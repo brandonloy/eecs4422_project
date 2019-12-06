@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 # Adapted from
 # https://stackoverflow.com/questions/6090399/get-hog-image-features-from-opencv-python
 def hog(img, cell_size = (8,8), block_size = (2, 2), nbins = 9):
+    """
+    Returns histogram of gradients for the input image
+    """
     # winSize is the size of the image cropped to an multiple of the cell size
     hog = cv2.HOGDescriptor(_winSize=(img.shape[1] // cell_size[1] * cell_size[1],
                                       img.shape[0] // cell_size[0] * cell_size[0]),
@@ -43,45 +46,4 @@ def hog(img, cell_size = (8,8), block_size = (2, 2), nbins = 9):
 
 
 
-
- # number of orientation bins
-#for every 8x8 cell of the image, generate 64 gradient vectors
-#(1 for every pixel) represent these gradients in a histogram
-# of 9 bins
-#
-# For every 2x2 block of cells, normalize using stride 1
-# this way the nomralization takes into account neighboring blocks
-
-#output is 9 bins for every cell
-
-
-##img = cv2.imread('skater.jpg')
-##
-###img = cv2.cvtColor(cv2.imread("skater.jpg"), cv2.COLOR_BGR2GRAY)
-##cell_size = (8, 8)  # h x w in pixels
-##block_size = (2, 2)  # h x w in cells
-##nbins = 9 
-##
-##bbox = cv2.selectROI(img, False)
-##x, y, w, h = bbox
-##if (w % 2 != 1):
-##    w = w - 1
-##if (h % 2 != 1):
-##    h = h - 1
-##patch = img[y:y+h,x:x+w]
-##gradients = hog(img)
-##print(gradients.shape)
-##print(patch.shape)
-##
-##
-##
-##for i in range(0,9):
-##    plt.subplot(331 + i)
-##    plt.imshow(gradients[:,:,i])
-####    plt.pcolor(gradients[:, :, i])
-####    plt.gca().invert_yaxis()
-####    plt.gca().set_aspect('equal', adjustable='box')
-####    plt.colorbar()
-##plt.show()
-##
 
