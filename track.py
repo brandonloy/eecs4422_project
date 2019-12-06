@@ -17,9 +17,10 @@ from peakDetect import findPeak2d
 def csrTrack(viddir = "rubiks", genPlot = False):
     """
     Input:
-    viddir - directory with video frames, must be named
-             such that when sorted alphanumerically, it is
-             in chronological order
+    viddir - directory with video frames as jpg files.
+             Jpg's must be named so that its alphanumerical order
+             matches the chronological order of the frames
+             
     genPlot - Set to True to display channel activation maps
     """
     cell = 4
@@ -90,9 +91,6 @@ def csrTrack(viddir = "rubiks", genPlot = False):
                     maxx.append(0)
                     maxy.append(0)
                     reliable.append(0)
-
-
-
 
             #----------------------------------------- Generate response plots
             if genPlot:
