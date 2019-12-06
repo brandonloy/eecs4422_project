@@ -1,5 +1,5 @@
 # EECS 4422 Project - Brandon Loy
- Naive implementation of CSR DCF Tracker [1]
+Naive implementation of a video tracker based on Channel and Spatial Reliability - Discriminant Correlation Filter Tracker (CSR-DCF) [1]. A region containing a target object is manually selected. Histogram of Gradients is used to extract features from video frames. Correlation filters are used to to localize the target object in subsequent frames. 
  
 ### Getting Started
 Install the required python libraries
