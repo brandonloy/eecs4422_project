@@ -14,7 +14,7 @@ from peakDetect import findPeak2d
 
 
 
-def csrTrack(viddir = "rubiks", genPlot = False):
+def csrTrack(viddir, genPlot = False):
     """
     Input:
     viddir - directory with video frames as jpg files.

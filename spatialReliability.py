@@ -28,6 +28,8 @@ def epanK(n):
     
 def spatialMap1(img, bbox):
     """
+    !!!!!!!!!!!!!!!!!!!! THIS ONE IS NOT IN USE !!!!!!!!!!!!!!!!!!!!
+
     Creates a mask for filter creation
     In the original CSR-DCF, this mask is used as a
     prior distribution to compute the MAP estimate of the
@@ -134,8 +136,7 @@ def spatialMap(img, bbox):
 
     out = np.zeros(img[:,:,0].shape)
     out[y:y+h,x:x+w] = mask
-    
-    cv2.imshow('mask',out)
+
     return out
 
 
