@@ -6,8 +6,8 @@ import numpy as np
 import time
 from hog import hog
 from spatialReliability import spatialMap
-from hogFilter import hogFilter
-from hogFilter import convFilt
+from features import convFilt
+from features import getFeatures
 from scipy import signal
 from peakDetect import findPeak2d
 
@@ -50,12 +50,12 @@ def csrTrack(viddir, genPlot = False):
             print('Initial Center: ' + str(((x+w//2)//cell,(y+h//2)//cell)))
             #learn is the highest peak in the expected response
             #(not normalized)
-            filt, feat, exp, learn = hogFilter(hsv, bbox, (cell,cell))
+            filt, feat, exp, learn = getFeatures(hsv, bbox, (cell,cell))
             resp = exp
         else:
         #find position in next frame
             resp = np.zeros(feat.shape)
-            feat = hog(hsv,(cell,cell))
+            _, feat, _, _ = getFeatures(hsv, bbox,(cell,cell))
 
             # weights for channel reliability
             reliable = []
@@ -70,7 +70,7 @@ def csrTrack(viddir, genPlot = False):
             cx = x + w//2
             cy = y + h//2
             #print(cx,cy)
-            for i in range(0,9):
+            for i in range(0,10):
                 #search new features with old filters
                 resp[:,:,i], _ = convFilt(filt[:,:,i],feat[:,:,i])
                 #find peaks in the response window of the bbox
@@ -97,7 +97,7 @@ def csrTrack(viddir, genPlot = False):
                 foo = []
                 foobar= []
                 fu = []
-                for i in range(0,9):
+                for i in range(0,10):
                     foo.append(resp[:,:,i])
                     foobar.append(filt[:,:,i])
                     fu.append(exp[:,:,i])
@@ -112,7 +112,7 @@ def csrTrack(viddir, genPlot = False):
             newcy = 0
             #print(np.sum(reliable))
             #print(reliable)
-            for i in range(0,9):
+            for i in range(0,10):
                 #maximum peaks*channel reliability
                 newcx += maxx[i]*reliable[i]
                 newcy += maxy[i]*reliable[i]
@@ -135,7 +135,7 @@ def csrTrack(viddir, genPlot = False):
                 y = 0
             bbox = (x,y,w,h)
             try:
-                filt, feat, exp, learn = hogFilter(hsv, bbox, (cell,cell))
+                filt, feat, exp, learn = getFeatures(hsv, bbox, (cell,cell))
             except:
                 print("BOX IS OUT OF BOUNDS, new box: " + str(bbox))
         imcopy = np.array(img)

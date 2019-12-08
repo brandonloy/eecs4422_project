@@ -6,9 +6,9 @@ import math as m
 from hog import hog
 from spatialReliability import spatialMap
 from scipy import signal
+from colorName import colorFeat
 
-
-def hogFilter(hsv, bbox, cell_size=(8,8)):
+def getFeatures(hsv, bbox, cell_size=(8,8)):
     '''
     Calculates HOG features from the supplied HSV image
 
@@ -32,34 +32,41 @@ def hogFilter(hsv, bbox, cell_size=(8,8)):
     mask[:,:,0] = res
     mask[:,:,1] = res
     mask[:,:,2] = res
-
+##    print(res.dtype)
+##    print(hsv.dtype)
+##    print(mask.dtype)
     maskedImg = cv2.bitwise_and(hsv, mask)
-
+##    plt.imshow(mask)
+##    plt.show()
     patch = maskedImg[y:y+h,x:x+w]
 
-# Filter should be the whole HOG image, but I get better results with a patch
+
+# Filter should be the whole HOG image, but i started off with a patch
     filt = hog(patch, cell_size)
     #filt = hog(maskedImg, cell_size)
-
     feat = hog(hsv, cell_size)
 
-    maskedFilt = np.array(feat)
-
     feat_y, feat_x, _ = feat.shape
+    filt_y, filt_x, _ = filt.shape
+
+    color = colorFeat(hsv, bbox)
+    colorFilt = color[y:y+h,x:x+w]
     
-    res = cv2.resize(res,(feat_x, feat_y))
-    #print(hsv.shape, feat.shape, res.shape)
-    for i in range(0,9):
-        maskedFilt[:,:,i] = np.multiply(feat[:,:,i],res)
-    #filt = maskedFilt
-    #print(filt.shape)
-    
+    color = cv2.resize(color,(feat_x, feat_y))
+    colorFilt = cv2.resize(colorFilt,(filt_x, filt_y))
+##    plt.subplot(121)
+##    plt.imshow(color)
+##    plt.subplot(122)
+##    plt.imshow(colorFilt)
+##    plt.show()
+    feat = np.dstack((feat,color))
+    filt = np.dstack((filt,colorFilt))
     #9 bins
     exp = np.zeros(feat.shape)
-    learn = np.zeros(9)
-    for i in range(0, 9):
+    learn = np.zeros(10)
+    
+    for i in range(0, 10):
         exp[:,:,i], learn[i] = convFilt(filt[:,:,i],feat[:,:,i])
-
     learn = cv2.normalize(learn, learn, 0, 1, cv2.NORM_MINMAX)
     
     return filt, feat, exp, learn

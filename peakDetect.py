@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math as m
 from hog import hog
-from hogFilter import hogFilter
 from spatialReliability import spatialMap
 from scipy import signal
 
